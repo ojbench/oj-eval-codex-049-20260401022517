@@ -2,7 +2,6 @@
 #define PPCA_SRC_HPP
 
 #include "math.h"
-#include "monitor.h"
 
 class Controller {
 
@@ -112,10 +111,18 @@ public:
             Vec perp1(-dir.y, dir.x);
             Vec perp2(dir.y, -dir.x);
             double side_speed = (v_max - 1e-4) * 0.3;
-            Vec side1 = clamp_speed(perp1 * side_speed);
-            if (safe_velocity(side1)) return side1;
-            Vec side2 = clamp_speed(perp2 * side_speed);
-            if (safe_velocity(side2)) return side2;
+            // Choose side preference based on id to break symmetry
+            if (id % 2 == 0) {
+                Vec side1 = clamp_speed(perp1 * side_speed);
+                if (safe_velocity(side1)) return side1;
+                Vec side2 = clamp_speed(perp2 * side_speed);
+                if (safe_velocity(side2)) return side2;
+            } else {
+                Vec side2 = clamp_speed(perp2 * side_speed);
+                if (safe_velocity(side2)) return side2;
+                Vec side1 = clamp_speed(perp1 * side_speed);
+                if (safe_velocity(side1)) return side1;
+            }
         }
 
         // As a last resort, stop
@@ -125,4 +132,3 @@ public:
 
 
 #endif // PPCA_SRC_HPP
-
