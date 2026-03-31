@@ -2,6 +2,7 @@
 #define PPCA_SRC_HPP
 
 #include "math.h"
+class Monitor; // forward declaration; defined by the judge driver
 
 class Controller {
 
